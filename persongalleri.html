@@ -1,0 +1,72 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Persongalleri</title>
+
+    <style>
+      section {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+        grid-template-rows: auto;
+      }
+      img {
+        max-width: 150px;
+      }
+
+      article {
+        border: solid pink 2px;
+        min-height: 100px;
+        padding: 10px;
+      }
+    </style>
+  </head>
+  <body>
+    <section></section>
+    <template>
+      <article>
+        <h2></h2>
+        <img src="" alt="" />
+
+        <p class="efternavn"></p>
+        <p class="email"></p>
+      </article>
+    </template>
+
+    <script>
+      const container = document.querySelector("section");
+      const temp = document.querySelector("template");
+
+      const url = "https://tema7-dbd2.restdb.io/rest/persongalleri";
+
+      const options = {
+        headers: {
+          "x-apikey": "61fd139a3f215f310a37be9f",
+        },
+      };
+
+      async function hentData() {
+        const respons = await fetch(url, options);
+        const json = await respons.json();
+        vis(json);
+      }
+
+      function vis(personliste) {
+        personliste.forEach((person) => {
+          const klon = temp.cloneNode(true).content;
+          klon.querySelector("h2").textContent = person.navn;
+          klon.querySelector(".email").textContent = person.email;
+          klon.querySelector(".efternavn").textContent = person.efternavn;
+          klon.querySelector("img").src = `/faces/${person.profilbillede}`;
+          klon.querySelector("img").alt = person.personbillede;
+
+          container.appendChild(klon);
+        });
+      }
+
+      hentData();
+    </script>
+  </body>
+</html>
